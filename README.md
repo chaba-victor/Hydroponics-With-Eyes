@@ -1,6 +1,3 @@
-Here’s a **complete README.md draft** for your project with badges, sections, and the system diagram embedded:
-
----
 
 # 🌱 Smart Hydroponics System with AI-Driven Plant Health Monitoring
 
