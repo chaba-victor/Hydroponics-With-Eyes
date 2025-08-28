@@ -160,13 +160,3 @@ This project is licensed under the **MIT License** – see [LICENSE](LICENSE) fo
 ---
 
 ---
-
-### ✅ Next Step:
-
-I can now **generate `docs/hardware.md`** with:
-
-* Complete **Bill of Materials** (with links for purchase)
-* **Wiring diagram** for ESP32 + sensors + pumps + camera
-* Power distribution details
-
-Do you want me to proceed with **hardware.md including wiring diagram**? Or **start with ML workflow documentation**?
