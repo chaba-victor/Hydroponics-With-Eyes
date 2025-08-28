@@ -1,178 +1,175 @@
+Here’s a **complete README.md draft** for your project with badges, sections, and the system diagram embedded:
+
+---
 
 # 🌱 Smart Hydroponics System with AI-Driven Plant Health Monitoring
 
-An **IoT-enabled hydroponics system** that automates plant care (nutrients, water, lighting) and uses **machine learning** to detect plant health issues from leaf images.
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-ESP32-blue.svg)](https://www.espressif.com/)
+[![ML](https://img.shields.io/badge/ML-TensorFlow-orange.svg)](https://www.tensorflow.org/)
+[![Dashboard](https://img.shields.io/badge/UI-Next.js-black.svg)](https://nextjs.org/)
+
+An **IoT-enabled hydroponics system** that automates plant care and uses **machine learning** to predict plant health from leaf images.
 
 ---
 
-## ✅ **Features**
+## 📚 Table of Contents
 
-* Automated control of **pH**, **EC**, **water level**, **lighting**, and **temperature**.
-* **Camera-based plant health analysis** using a trained CNN.
-* **Predictive nutrient dosing** based on growth stage.
-* Remote monitoring via **web or mobile dashboard**.
-* Integration with **Home Assistant** for smart home automation.
-
----
-
-## 🛠 **Hardware Components**
-
-| Component     | Description                                                                                         |
-| ------------- | --------------------------------------------------------------------------------------------------- |
-| **MCU**       | ESP32-C6 (Wi-Fi + BLE + good processing for ML inference if TinyML is used)                         |
-| **Sensors**   | DHT22 (Temp/Humidity), pH sensor, EC sensor, water level sensor, LDR (light intensity)              |
-| **Camera**    | OV2640 (ESP32-CAM module) or Arducam Mini                                                           |
-| **Actuators** | Submersible water pump, peristaltic pumps (for nutrients & pH adjustment), grow lights, exhaust fan |
-| **Power**     | 12V DC supply + buck converter for 5V and 3.3V                                                      |
-| **Extras**    | LCD (I²C) for local display, SD card slot for image/data logging                                    |
+* [Overview](#overview)
+* [Features](#features)
+* [System Architecture](#system-architecture)
+* [Hardware Setup](#hardware-setup)
+* [Software Stack](#software-stack)
+* [Quick Start](#quick-start)
+* [Machine Learning Workflow](#machine-learning-workflow)
+* [Project Roadmap](#project-roadmap)
+* [Screenshots](#screenshots)
+* [Contributing](#contributing)
+* [License](#license)
 
 ---
 
-## 🔍 **System Architecture**
+## ✅ Overview
 
-```txt
-+-------------------------+
-|      Cloud Server       | <-- Web/Mobile Dashboard
-|  (Data Storage + API)   |
-+-------------------------+
-           ↑
-           ↓ (MQTT/HTTP)
-+-------------------------+
-|      ESP32 Controller   |
-|  (Sensor + Actuator IO) |
-+-------------------------+
-      ↑     ↑      ↑
-     pH    EC     Camera
-     Temp  LDR
-     ...   ...
+This project combines **embedded systems**, **IoT**, and **AI** to create an intelligent hydroponics system capable of:
+
+* Monitoring environmental factors (pH, EC, temperature, humidity, light).
+* Automating nutrient dosing, lighting, and water cycles.
+* Detecting plant health issues (deficiencies, diseases) using **computer vision**.
+* Providing real-time control and analytics via a **web dashboard**.
+
+---
+
+## ✨ Features
+
+✔ Automated nutrient & water management
+✔ Real-time sensor data monitoring via dashboard
+✔ AI-based plant health detection (healthy vs deficient)
+✔ Cloud integration for remote control & logging
+✔ Edge inference with **TinyML** or cloud-based predictions
+
+---
+
+## 🖼 System Architecture
+
+![System Diagram](docs/images/architecture-diagram.png)
+
+**Data Flow:**
+
+1. ESP32 reads sensors & controls actuators.
+2. Captured leaf images sent to the ML model (cloud or edge).
+3. Predictions displayed on the dashboard along with real-time stats.
+
+---
+
+## 🛠 Hardware Setup
+
+| Component            | Quantity | Specs                   |
+| -------------------- | -------- | ----------------------- |
+| **ESP32-CAM**        | 1        | Wi-Fi + Camera Module   |
+| **DHT22 Sensor**     | 1        | Temp & Humidity         |
+| **pH Sensor**        | 1        | 0-14 pH range           |
+| **EC Sensor**        | 1        | Electrical conductivity |
+| **Water Pump**       | 1        | 12V submersible         |
+| **Peristaltic Pump** | 2        | For pH and nutrients    |
+| **Grow Lights**      | 1 set    | Full-spectrum LED       |
+
+👉 **Full BOM:** [docs/hardware.md](docs/hardware.md)
+👉 **Wiring Diagram:** [docs/images/wiring-diagram.png](docs/images/wiring-diagram.png)
+
+---
+
+## 🖥 Software Stack
+
+* **Firmware:** ESP32 (Arduino / PlatformIO)
+* **Communication:** MQTT, HTTP
+* **ML Model:** TensorFlow → TensorFlow Lite (for edge)
+* **Backend:** Flask / FastAPI + PostgreSQL
+* **Dashboard:** Next.js + TailwindCSS
+
+---
+
+## 🚀 Quick Start
+
+### **1. Flash Firmware**
+
+```bash
+cd firmware
+platformio run --target upload
+```
+
+### **2. Start Backend**
+
+```bash
+cd cloud-backend
+pip install -r requirements.txt
+python app.py
+```
+
+### **3. Run Dashboard**
+
+```bash
+cd dashboard
+npm install
+npm run dev
 ```
 
 ---
 
-## 📸 **Machine Learning Workflow**
+## 🤖 Machine Learning Workflow
 
-### **1. Data Collection**
+1. **Collect Images**: Captured by ESP32-CAM → Uploaded to cloud.
+2. **Label Data**: Classes like `Healthy`, `Nitrogen Deficiency`, `Pest Damage`.
+3. **Train Model**: MobileNetV2 / EfficientNet for classification.
+4. **Deploy Model**:
 
-* Capture images of plant leaves using the camera module.
-* Store images locally (SD card) and sync to cloud for labeling.
+   * Cloud inference via API.
+   * Edge inference using **TensorFlow Lite** for ESP32.
 
-### **2. Data Labeling**
-
-* Categories: **Healthy**, **Nitrogen Deficiency**, **Phosphorus Deficiency**, **Potassium Deficiency**, **Pest Damage**, etc.
-* Use tools like **LabelImg** or **Roboflow**.
-
-### **3. Model Training**
-
-* Use **TensorFlow/Keras** for CNN-based classification:
-
-  * Base Model: **MobileNetV2** or **EfficientNet** (lightweight for edge devices).
-  * Transfer learning for faster convergence.
-
-### **4. Deployment**
-
-* Two options:
-
-  * **Cloud inference**: Send image to server → return prediction.
-  * **Edge inference (TinyML)**: Quantize model with **TensorFlow Lite** and run on ESP32 or external AI accelerator (e.g., **Kendryte K210**).
+👉 Detailed ML steps: [docs/ml-workflow.md](docs/ml-workflow.md)
 
 ---
 
-## ⚙️ **Firmware Roadmap**
+## 🗺 Project Roadmap
 
-### **Tasks**
-
-* **Sensor Reading Loop**:
-
-  * pH, EC, Temp, Humidity, Water Level, Light.
-* **Control Logic**:
-
-  * Water pump ON/OFF.
-  * Nutrient dosing via peristaltic pumps (controlled by PWM).
-  * Grow lights schedule (timer + LDR feedback).
-* **Camera Integration**:
-
-  * Periodic image capture.
-  * Upload via HTTP POST or MQTT.
-* **Connectivity**:
-
-  * Wi-Fi + MQTT for real-time data.
-  * OTA firmware updates.
-* **Local UI**:
-
-  * Show key stats on LCD.
-
-### **Libraries**
-
-* `ArduinoJson` (data handling)
-* `PubSubClient` (MQTT)
-* `ESPAsyncWebServer` (local dashboard)
-* `TFT_eSPI` (for display, if needed)
-* `ESP32CAM` (for image capture)
+* ✅ **Phase 1**: Sensor integration & MQTT communication
+* ✅ **Phase 2**: Pump & light automation
+* ✅ **Phase 3**: Image capture & upload
+* ✅ **Phase 4**: Train ML model for plant health detection
+* ✅ **Phase 5**: Cloud API & dashboard integration
+* 🔜 **Phase 6**: Edge AI deployment
 
 ---
 
-## ☁️ **Cloud & Dashboard Setup**
+## 🖼 Screenshots
 
-* **Backend**: Node.js + Express (or Python Flask/FastAPI).
-* **Database**: PostgreSQL or MongoDB for sensor logs.
-* **MQTT Broker**: Mosquitto (self-hosted or cloud).
-* **Image Analysis Service**:
+*(Add later after UI development)*
 
-  * REST API endpoint for ML model.
-  * Could use **Flask + TensorFlow Serving** or **FastAPI + ONNX Runtime**.
-* **Dashboard (Frontend)**:
-
-  * **Next.js** or **React** for UI.
-  * Charts for sensor data.
-  * Alerts for anomalies (e.g., pH out of range).
-  * Display plant health predictions (Healthy / Deficient / Pest).
+* Dashboard with live sensor data
+* Plant health prediction page
 
 ---
 
-## 📈 **Project Roadmap**
+## 🤝 Contributing
 
-### **Phase 1: Core IoT System**
-
-* ✅ Setup ESP32 for sensor reading + pump control.
-* ✅ Implement MQTT and dashboard for real-time data.
-
-### **Phase 2: Automation**
-
-* ✅ Add logic for pH & EC regulation.
-* ✅ Implement lighting & climate control.
-
-### **Phase 3: Camera & Image Capture**
-
-* ✅ Integrate ESP32-CAM for leaf images.
-* ✅ Build local storage + cloud sync.
-
-### **Phase 4: Machine Learning**
-
-* ✅ Collect and label dataset.
-* ✅ Train CNN model & deploy (cloud or edge).
-
-### **Phase 5: Cloud Dashboard**
-
-* ✅ Build responsive dashboard with analytics.
-* ✅ Add AI-based plant health insights.
+We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ---
 
-## 📚 **Skills You’ll Learn**
+## 📜 License
 
-* Embedded systems (ESP32, sensors, actuators).
-* IoT protocols (MQTT, HTTP).
-* ML model training & edge deployment.
-* Cloud backend & dashboard development.
-* Practical application of biology in tech.
+This project is licensed under the **MIT License** – see [LICENSE](LICENSE) for details.
 
 ---
 
-### 🔗 **Future Enhancements**
-
-* Voice control (Alexa/Google Assistant).
-* Automated nutrient mixing based on ML predictions.
-* Integration with Home Assistant.
-* Multi-plant setup with individual monitoring.
-
 ---
+
+### ✅ Next Step:
+
+I can now **generate `docs/hardware.md`** with:
+
+* Complete **Bill of Materials** (with links for purchase)
+* **Wiring diagram** for ESP32 + sensors + pumps + camera
+* Power distribution details
+
+Do you want me to proceed with **hardware.md including wiring diagram**? Or **start with ML workflow documentation**?
