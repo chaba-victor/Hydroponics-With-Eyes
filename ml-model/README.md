@@ -20,10 +20,10 @@
 Clone the repository
 
 ```bash
-git clone https://github.com/chaba-victor/cnn-classifier.git
+git clone https://github.com/chaba-victor/smart-hydroponics.git
 ```
 
-### STEP 01- Create a conda environment in your working repository
+### STEP 01- Create a conda environment in your working diectory
 
 ```bash
 conda create -n cnncl python=3.8 -y

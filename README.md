@@ -40,9 +40,13 @@ This project combines **embedded systems**, **IoT**, and **AI** to create an int
 ## ✨ Features
 
 ✔ Automated nutrient & water management
+
 ✔ Real-time sensor data monitoring via dashboard
+
 ✔ AI-based plant health detection (healthy vs deficient)
+
 ✔ Cloud integration for remote control & logging
+
 ✔ Edge inference with **TinyML** or cloud-based predictions
 
 ---
